@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Octoshirt</title>
+  <style>
+    
+    *{
+      box-sizing: border-box;
+    }
+    
+    body, html{
+      height: 100%;
+      font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    }
+    
+    body{
+      margin: 0;
+      display: flex;
+    }
+    
+    nav{
+      display: flex;
+      flex-flow: column nowrap;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: black;
+    }
+    
+    nav span{
+      padding: 1em;
+      color: #999;
+    }
+    
+    nav a{ 
+      padding: 1em;
+      background: #333;
+      flex: 1 0 0;
+      min-width: 10em;
+      color: #d7d7d7;
+      text-decoration: none;
+    }
+    
+    nav a:hover{
+      background: #111;
+    }
+    
+    nav a + a{
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    nav a:target{
+      color: #fc0;
+      outline: none;
+    }
+    
+    input[type='color']{
+      position: absolute;
+      margin-top: 1em;
+      margin-left: 1em;
+      width: 3em;
+      height: 3em;
+    }
+    
+    input[type='color']::after{
+      position: absolute;
+      top: 0.2em;
+      font-size: 1em;
+      left: 3.5em;
+      content: 'background color';
+    }
+    
+    .credits{
+      font-size: 0.85em;
+      margin: 0 1em 1em;
+    }
+    
+    .credits a{
+      color: black;
+    }
+    
+    .container{
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: flex-end;
+      align-items: flex-end;
+      width: 100%;
+      height: 100%;
+      margin: auto;
+      background-color: rgb(186, 234, 145);
+      background-image: url(octocat.png), url(tshirt.png);
+      background-position: center, center;
+      background-repeat: no-repeat;
+      background-size: auto 40%, auto 90%;
+      background-blend-mode: normal;
+    }
+    
+    .warning{
+      z-index: 2;
+      font-size: 1.2em;
+      padding: 2rem;
+      position: absolute;
+      width: 25em;
+      height: 6em;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      background: #E0E479;
+      outline: 2000px solid rgba(0, 0, 0, 0.8);
+    }
+    
+    .warning a, em{
+      font-style: normal;
+      white-space: nowrap;
+    }
+    
+  </style>
+</head>
+<body>
+  
+  <nav>
+    <span>Blend Modes</span>
+  </nav>
+  
+  <input type="color" value="#BAEA91">
+  
+  <div class="container">
+    <p class="credits">
+      by <a href="https://twitter.com/razvancaliman" target="_blank">@razvancaliman</a> /
+      <a href="http://www.amazon.com/Quiksilver-Blank-Slim-T-Shirt-Athletic/dp/B00AZLOX34" target="_blank">T-Shirt</a> from Quicksilver /
+      <a href="http://octodex.github.com/" target="_blank">Octocat</a> from GitHub.
+    </p>
+  </div>
+  
+  <script type="text/x-template" id="support-warning">
+    <div class="warning">
+      Rats! This browser does not support <em>CSS Blend Modes</em>. 
+      <a href="http://html.adobe.com/webplatform/enable/" target="_blank">Find out how to get one</a>.
+    </div>
+  </script>
+  
+  <script>
+  
+  var nav = document.querySelector('nav'),
+      fragment = document.createDocumentFragment(),
+      container = document.querySelector('.container'),
+      picker = document.querySelector('input[type="color"]'),
+      modes = ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"],
+      defaultBlendMode;
+      
+  function setBlendMode(mode){
+    container.style['background-blend-mode'] = mode
+  }
+  
+  function setBackgroundColor(color){
+    container.style['background-color'] = color
+  }
+  
+  function getDefaultBlendMode(){
+    var hash = window.location.hash.substring(1)
+    return (modes.indexOf(hash) > -1) ? hash : modes[0]
+  }
+  
+  nav.addEventListener('mouseover', function(e){
+    if (e.target.tagName.toLowerCase() === 'a'){
+      setBlendMode(e.target.dataset['mode'])
+    }
+  })
+  
+  nav.addEventListener('mouseout', function(e){
+    setBlendMode(defaultBlendMode)
+  })
+  
+  picker.addEventListener('change', function(e){
+    setBackgroundColor(e.target.value)
+  })
+  
+  window.addEventListener('hashchange', function(){
+    defaultBlendMode = getDefaultBlendMode()
+    setBlendMode(defaultBlendMode)
+  })
+  
+  
+  modes.forEach(function(mode){
+    var a = document.createElement('a')
+    a.href = '#' + mode
+    a.id = mode
+    a.setAttribute('data-mode', mode)
+    a.textContent = mode
+    fragment.appendChild(a)
+  })
+  
+  nav.appendChild(fragment)
+  defaultBlendMode = getDefaultBlendMode()
+  setBlendMode(defaultBlendMode)
+  
+  // light feature detection & help users
+  if (!('background-blend-mode' in document.body.style)){
+    var warning = document.querySelector('#support-warning').innerHTML
+    document.body.insertAdjacentHTML('afterbegin', warning)
+  }
+  
+  </script>
+</body>
+</html>
