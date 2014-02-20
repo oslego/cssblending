@@ -54,7 +54,8 @@
       outline: none;
     }
     
-    input[type='color']{
+    input[type='color'],
+    input[type='checkbox']{
       position: absolute;
       margin-top: 1em;
       margin-left: 1em;
@@ -62,12 +63,24 @@
       height: 3em;
     }
     
-    input[type='color']::after{
+    input[type='checkbox']{
+      margin-top: 4.5em;
+    }
+    
+    input[type='color']::after,
+    input[type='checkbox']::after{
       position: absolute;
       top: 0.2em;
       font-size: 1em;
       left: 3.5em;
+    }
+    
+    input[type='color']::after{
       content: 'background color';
+    }
+    
+    input[type='checkbox']::after{
+      content: 'blend with background color';
     }
     
     .credits{
@@ -125,6 +138,7 @@
   </nav>
   
   <input type="color" value="#BAEA91">
+  <input type="checkbox" checked />
   
   <div class="container">
     <p class="credits">
@@ -147,11 +161,12 @@
       fragment = document.createDocumentFragment(),
       container = document.querySelector('.container'),
       picker = document.querySelector('input[type="color"]'),
+      isolation = document.querySelector('input[type="checkbox"]'),
       modes = ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"],
       defaultBlendMode;
       
   function setBlendMode(mode){
-    container.style['background-blend-mode'] = mode
+    container.style['background-blend-mode'] = isolation.checked ? mode : mode + ", normal"
   }
   
   function setBackgroundColor(color){
@@ -179,6 +194,10 @@
   
   window.addEventListener('hashchange', function(){
     defaultBlendMode = getDefaultBlendMode()
+    setBlendMode(defaultBlendMode)
+  })
+  
+  isolation.addEventListener('change', function(){
     setBlendMode(defaultBlendMode)
   })
   
