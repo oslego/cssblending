@@ -181,11 +181,11 @@
       defaultBlendMode;
 
   function setBlendMode(mode){
-    container.style['background-blend-mode'] = isolation.checked ? mode : mode + ", normal"
+    container.style.backgroundBlendMode = isolation.checked ? mode : mode + ", normal"
   }
 
   function setBackgroundColor(color){
-    container.style['background-color'] = color
+    container.style.backgroundColor = color
   }
 
   function getDefaultBlendMode(){
@@ -231,7 +231,7 @@
   setBlendMode(defaultBlendMode)
 
   // light feature detection & help users
-  if (!('background-blend-mode' in document.body.style)){
+  if (!('backgroundBlendMode' in document.body.style)){
     var warning = document.querySelector('#support-warning').innerHTML
     document.body.insertAdjacentHTML('afterbegin', warning)
   }
